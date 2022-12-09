@@ -14,7 +14,7 @@ if __name__ == '__main__':
     model = MultiClassModel(
         n_out = 5,
         dropout = 0.3,
-        lr = 1e-3     # 0.0001
+        lr = 1e-5     # 0.000001
     )
 
     logger = TensorBoardLogger("logs", name = "bert-multi-class")
