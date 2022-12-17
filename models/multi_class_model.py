@@ -8,6 +8,10 @@ import pytorch_lightning as pl
 from transformers import BertModel
 from sklearn.metrics import classification_report
 
+from torchmetrics import Accuracy
+
+import matplotlib.pyplot as plt
+
 class MultiClassModel(pl.LightningModule):
     def __init__(self, dropout, n_out, lr) -> None:
         super(MultiClassModel, self).__init__()
@@ -56,7 +60,7 @@ class MultiClassModel(pl.LightningModule):
         self.log("accuracy", report["accuracy"], prog_bar = True)
         self.log("loss", loss)
 
-        return loss
+        return {"loss": loss, "predictions": out, "labels": y}
 
     def validation_step(self, batch, batch_idx):
         x_input_ids, x_token_type_ids, x_attention_mask, y = batch
@@ -87,4 +91,46 @@ class MultiClassModel(pl.LightningModule):
         pred = out.argmax(1).cpu()
         true = y.argmax(1).cpu()
 
-        return pred, true
+        # return [pred, true]
+        return {"predictions": pred, "labels": true}
+
+    def training_epoch_end(self, outputs):
+        labels = []
+        predictions = []
+
+        for output in outputs:
+            for out_lbl in output["labels"].detach().cpu():
+                labels.append(out_lbl)
+            for out_pred in output["predictions"].detach().cpu():
+                predictions.append(out_pred)
+
+        labels = torch.stack(labels).int()
+        predictions = torch.stack(predictions)
+
+        # Hitung akurasi
+        accuracy = Accuracy(task = "multiclass")
+        acc = accuracy(predictions, labels)
+
+        # Print Akurasinya
+        print("Overall Training Accuracy : ", acc)
+
+    def on_predict_epoch_end(self, outputs):
+        labels = []
+        predictions = []
+
+        for output in outputs:
+            # print(output[0]["predictions"][0])
+            # print(len(output))
+            # break
+            for out in output:
+                for out_lbl in out["labels"].detach().cpu():
+                    labels.append(out_lbl)
+                for out_pred in out["predictions"].detach().cpu():
+                    predictions.append(out_pred)
+
+        labels = torch.stack(labels).int()
+        predictions = torch.stack(predictions)
+
+        accuracy = Accuracy(task = "multiclass")
+        acc = accuracy(predictions, labels)
+        print("Overall Testing Accuracy : ", acc)

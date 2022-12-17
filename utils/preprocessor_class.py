@@ -56,10 +56,10 @@ class PreprocessorClass(pl.LightningModule):
         return self.stemmer.stem(string)
 
     def load_data(self,):
-        with open("../data/training.res", "rb") as tdr:
+        with open("data/training.res", "rb") as tdr:
             train_pkl = pickle.load(tdr)
             train = pd.DataFrame({'title': train_pkl[0], 'label': train_pkl[1]})
-        with open("../data/testing.res", "rb") as tsdr:
+        with open("data/testing.res", "rb") as tsdr:
             test_pkl = pickle.load(tsdr)
             test = pd.DataFrame({'title': test_pkl[0], 'label': test_pkl[1]})
 
@@ -102,8 +102,6 @@ class PreprocessorClass(pl.LightningModule):
             x_attention_mask.append(tkn["attention_mask"])
             y.append(binary_lbl)
 
-            if baris > 10:
-                break
 
         x_input_ids = torch.tensor(x_input_ids)
         x_token_type_ids = torch.tensor(x_token_type_ids)
