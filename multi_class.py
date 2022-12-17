@@ -8,8 +8,13 @@ from pytorch_lightning.loggers import TensorBoardLogger
 
 if __name__ == '__main__':
     dm = PreprocessorClass(
+<<<<<<< HEAD
         preprocessed_dir = "data/preprocessed",
         batch_size = 200,
+=======
+        preprocessed_dir = "BERT-Classification/data/preprocessed",
+        batch_size = 10,
+>>>>>>> 3a5c2cd741cfa5d5bb9183b85eda4e9b394be76c
         max_length = 100
     )
 
@@ -24,9 +29,8 @@ if __name__ == '__main__':
     trainer = pl.Trainer(
         # gpus = 1,
         accelerator = "gpu",
-        max_epochs = 1,
-        default_root_dir = "../checkpoint/class",
-        logger = logger
+        max_epochs = 10,
+        default_root_dir = "BERT-Classification/checkpoint/class"
     )
 
     trainer.fit(model, datamodule = dm)
