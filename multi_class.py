@@ -1,47 +1,54 @@
-from utils.preprocessor_class import PreprocessorClass
-from models.multi_class_model import MultiClassModel
+import argparse
 
-from sklearn.metrics import accuracy_score
+from utils.preprocessor_class import PreprocessorClass
+from load_dataset_smsa import PreprocessorIndoNLU
+from models.multi_class_model import MultiClassModel
 
 import pytorch_lightning as pl
 from pytorch_lightning.loggers import TensorBoardLogger
 
-if __name__ == '__main__':
-    dm = PreprocessorClass(
-<<<<<<< HEAD
-        preprocessed_dir = "data/preprocessed",
-        batch_size = 200,
-=======
-        preprocessed_dir = "BERT-Classification/data/preprocessed",
-        batch_size = 10,
->>>>>>> 3a5c2cd741cfa5d5bb9183b85eda4e9b394be76c
-        max_length = 100
-    )
+def collect_parser():
+    parser = argparse.ArgumentParser()
 
+    parser.add_argument("--accelerator", type=str, default="cpu")
+    parser.add_argument("--gpu_id", type=int, default=0)
+    parser.add_argument("--num_nodes", type=int, default=1)
+
+    parser.add_argument("--max_length", type=int,  default=100)
+    parser.add_argument("--batch_size", type=int, default=10)
+    parser.add_argument("--max_epochs", type=int, default=10)
+
+    parser.add_argument("--preprocessed_dir", type=str, default="data/preprocessed")
+    parser.add_argument("--train_data_dir", type=str, default="data/training.res")
+    parser.add_argument("--test_data_dir", type=str, default="data/testing.res")
+
+    parser.add_argument("--n_classes", type=str, default="5") # total label (class label)
+
+    return parser.parse_args()
+    
+
+if __name__ == '__main__':
+    args = collect_parser()
+
+    dm = PreprocessorIndoNLU(max_length = args.max_length, n_classes = args.n_classes, batch_size = 10)
+
+    # Learning rate diganti 1e-3 ke 1e-5
     model = MultiClassModel(
         n_out = 5,
         dropout = 0.3,
-        lr = 1e-5     # 0.000001
+        lr = 1e-5
     )
 
-    logger = TensorBoardLogger("logs", name = "bert-multi-class")
+    logger = TensorBoardLogger("logs", name="bert-multi-class")
 
     trainer = pl.Trainer(
-        # gpus = 1,
-        accelerator = "gpu",
-        max_epochs = 10,
-        default_root_dir = "BERT-Classification/checkpoint/class"
+        accelerator = args.accelerator,
+        num_nodes = args.num_nodes,
+        max_epochs = args.max_epochs,
+        default_root_dir = "checkpoints/class",
+        logger = logger
     )
 
     trainer.fit(model, datamodule = dm)
-    hasil = trainer.predict(model = model, datamodule = dm)
-    
-    # hasil_prediksi = hasil["predictions"][0].tolist()
-    # label_asli = hasil["labels"][1].tolist()
 
-    # print(label_asli)
-    # print("="*50)
-    # print(hasil_prediksi)
 
-    # akurasi = accuracy_score(label_asli, hasil_prediksi)
-    # print(akurasi)
