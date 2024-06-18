@@ -87,7 +87,7 @@ class MultiClassModel(pl.LightningModule):
         return {"loss": loss, "predictions": out, "F1": f1_score, "labels": y}
 
     def validation_step(self, valid_batch, batch_idx):
-        x_input_ids, x_token_type_ids, x_attention_mask, y = pred_batch
+        x_input_ids, x_token_type_ids, x_attention_mask, y = valid_batch
         
         out = self(input_ids = x_input_ids,
                    attention_mask = x_attention_mask,
