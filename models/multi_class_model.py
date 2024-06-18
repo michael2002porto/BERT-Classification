@@ -84,7 +84,8 @@ class MultiClassModel(pl.LightningModule):
         self.log("f1_score", f1_score, prog_bar = True)
         self.log("loss", loss)
 
-        return {"loss": loss, "predictions": out, "F1": f1_score, "labels": y}
+        # return {"loss": loss, "predictions": out, "F1": f1_score, "labels": y}
+        return {"loss": loss}
 
     def validation_step(self, valid_batch, batch_idx):
         x_input_ids, y = valid_batch
@@ -98,24 +99,28 @@ class MultiClassModel(pl.LightningModule):
         # true = y.argmax(1).cpu()
 
         # report = classification_report(true, pred, output_dict = True, zero_division = 0)
-        acc = self.accuracy(out, y)
+        # acc = self.accuracy(out, y)
         f1_score = self.f1(out, y)
         
         self.log("f1_score", f1_score, prog_bar = True)
-        self.log("accuracy", acc, prog_bar = True)
+        # self.log("accuracy", acc, prog_bar = True)
         self.log("loss", loss)
 
         return loss
     
     def predict_step(self, pred_batch, batch_idx):
-        x_input_ids, x_token_type_ids, x_attention_mask, y = pred_batch
+        # x_input_ids, x_token_type_ids, x_attention_mask, y = pred_batch        
+        x_input_ids, y = pred_batch
         
-        out = self(input_ids = x_input_ids,
-                   attention_mask = x_attention_mask,
-                   token_type_ids = x_token_type_ids)
+        # out = self(input_ids = x_input_ids,
+        #            attention_mask = x_attention_mask,
+        #            token_type_ids = x_token_type_ids)
+        out = self(input_ids = x_input_ids)
         # ke tiga parameter di input dan diolah oleh method / function forward
-        pred = out.argmax(1).cpu()
-        true = y.argmax(1).cpu()
+        # pred = out.argmax(1).cpu()
+        # true = y.argmax(1).cpu()
+        pred = out
+        true = y
 
         return {"predictions": pred, "labels": true}
 
