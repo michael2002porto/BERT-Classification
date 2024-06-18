@@ -72,8 +72,8 @@ class MultiClassModel(pl.LightningModule):
 
         loss = self.criterion(out, target = y.float())
 
-        pred = out.argmax(1).cpu()
-        true = y.argmax(1).cpu()
+        pred = out
+        true = y
 
         acc = self.accuracy(pred, true)
         f1_score = self.f1(pred, true)
@@ -94,8 +94,8 @@ class MultiClassModel(pl.LightningModule):
 
         loss = self.criterion(out, target = y.float())
 
-        # pred = out.argmax(1).cpu()
-        # true = y.argmax(1).cpu()
+        # pred = out
+        # true = y
 
         # report = classification_report(true, pred, output_dict = True, zero_division = 0)
         acc = self.accuracy(out, y)
@@ -114,8 +114,8 @@ class MultiClassModel(pl.LightningModule):
                    attention_mask = x_attention_mask,
                    token_type_ids = x_token_type_ids)
         # ke tiga parameter di input dan diolah oleh method / function forward
-        pred = out.argmax(1).cpu()
-        true = y.argmax(1).cpu()
+        pred = out
+        true = y
 
         return {"predictions": pred, "labels": true}
 
