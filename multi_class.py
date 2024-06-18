@@ -16,7 +16,7 @@ def collect_parser():
     parser.add_argument("--num_nodes", type=int, default=1)
 
     parser.add_argument("--max_length", type=int,  default=100)
-    parser.add_argument("--batch_size", type=int, default=10)
+    parser.add_argument("--batch_size", type=int, default=100)
     parser.add_argument("--max_epochs", type=int, default=10)
 
     parser.add_argument("--preprocessed_dir", type=str, default="data/preprocessed")
@@ -50,7 +50,7 @@ if __name__ == '__main__':
 
     trainer = pl.Trainer(
         accelerator = args.accelerator,
-        num_nodes = args.num_nodes,
+        # num_nodes = args.num_nodes,
         max_epochs = args.max_epochs,
         default_root_dir = "checkpoints/class",
         logger = logger
