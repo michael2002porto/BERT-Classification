@@ -10,7 +10,8 @@ from pytorch_lightning.loggers import TensorBoardLogger
 def collect_parser():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--accelerator", type=str, default="cpu")
+    # parser.add_argument("--accelerator", type=str, default="cpu")
+    parser.add_argument("--accelerator", type=str, default="gpu")
     parser.add_argument("--gpu_id", type=int, default=0)
     parser.add_argument("--num_nodes", type=int, default=1)
 
