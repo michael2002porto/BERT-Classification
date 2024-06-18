@@ -31,7 +31,13 @@ def collect_parser():
 if __name__ == '__main__':
     args = collect_parser()
 
-    dm = PreprocessorIndoNLU(max_length = args.max_length, n_classes = args.n_classes, batch_size = 10)
+    # dm = PreprocessorIndoNLU(max_length = args.max_length, n_classes = args.n_classes, batch_size = 10)
+
+    dm = PreprocessorClass(preprocessed_dir = args.preprocessed_dir,
+                           train_data_dir = args.train_data_dir,
+                           test_data_dir = args.test_data_dir,
+                           batch_size = args.batch_size,
+                           max_length = args.max_length)
 
     # Learning rate diganti 1e-3 ke 1e-5
     model = MultiClassModel(
@@ -51,5 +57,6 @@ if __name__ == '__main__':
     )
 
     trainer.fit(model, datamodule = dm)
+    hasil = trainer.predict(model = model, datamodule = dm)
 
 

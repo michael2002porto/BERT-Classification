@@ -69,18 +69,18 @@ class MultiClassModel(pl.LightningModule):
         
         out = self(input_ids = x_input_ids)
         # ke tiga parameter di input dan diolah oleh method / function forward
-
+        f1_score = self.f1(out, y.float())
         loss = self.criterion(out, target = y.float())
 
-        pred = out.argmax(1).cpu()
-        true = y.argmax(1).cpu()
+        # pred = out.argmax(1).cpu()
+        # true = y.argmax(1).cpu()
 
-        acc = self.accuracy(pred, true)
-        f1_score = self.f1(pred, true)
-        precission, recall, _ = self.precission_recall(out, y)
+        # acc = self.accuracy(pred, true)
+        # f1_score = self.f1(pred, true)
+        # precission, recall, _ = self.precission_recall(out, y)
         # report = classification_report(true, pred, output_dict = True, zero_division = 0)
 
-        self.log("accuracy", acc, prog_bar = True)
+        # self.log("accuracy", acc, prog_bar = True)
         self.log("f1_score", f1_score, prog_bar = True)
         self.log("loss", loss)
 
@@ -119,44 +119,44 @@ class MultiClassModel(pl.LightningModule):
 
         return {"predictions": pred, "labels": true}
 
-    def training_epoch_end(self, outputs):
-        labels = []
-        predictions = []
+    # def training_epoch_end(self, outputs):
+    #     labels = []
+    #     predictions = []
 
-        for output in outputs:
-            for out_lbl in output["labels"].detach().cpu():
-                labels.append(out_lbl)
-            for out_pred in output["predictions"].detach().cpu():
-                predictions.append(out_pred)
+    #     for output in outputs:
+    #         for out_lbl in output["labels"].detach().cpu():
+    #             labels.append(out_lbl)
+    #         for out_pred in output["predictions"].detach().cpu():
+    #             predictions.append(out_pred)
 
-        labels = torch.stack(labels).int()
-        predictions = torch.stack(predictions)
+    #     labels = torch.stack(labels).int()
+    #     predictions = torch.stack(predictions)
 
-        # Hitung akurasi
+    #     # Hitung akurasi
         
-        # accuracy = Accuracy(task = "multiclass", num_classes = self.num_classes)
-        acc = self.accuracy(predictions, labels)
-        f1_score = self.f1(predictions, labels)
-        # Print Akurasinya
-        print("Overall Training Accuracy : ", acc , "| F1 Score : ", f1_score)
+    #     # accuracy = Accuracy(task = "multiclass", num_classes = self.num_classes)
+    #     acc = self.accuracy(predictions, labels)
+    #     f1_score = self.f1(predictions, labels)
+    #     # Print Akurasinya
+    #     print("Overall Training Accuracy : ", acc , "| F1 Score : ", f1_score)
 
-    def on_predict_epoch_end(self, outputs):
-        labels = []
-        predictions = []
+    # def on_predict_epoch_end(self, outputs):
+    #     labels = []
+    #     predictions = []
 
-        for output in outputs:
-            # print(output[0]["predictions"][0])
-            # print(len(output))
-            # break
-            for out in output:
-                for out_lbl in out["labels"].detach().cpu():
-                    labels.append(out_lbl)
-                for out_pred in out["predictions"].detach().cpu():
-                    predictions.append(out_pred)
+    #     for output in outputs:
+    #         # print(output[0]["predictions"][0])
+    #         # print(len(output))
+    #         # break
+    #         for out in output:
+    #             for out_lbl in out["labels"].detach().cpu():
+    #                 labels.append(out_lbl)
+    #             for out_pred in out["predictions"].detach().cpu():
+    #                 predictions.append(out_pred)
 
-        labels = torch.stack(labels).int()
-        predictions = torch.stack(predictions)
+    #     labels = torch.stack(labels).int()
+    #     predictions = torch.stack(predictions)
         
-        acc = self.accuracy(predictions, labels)
-        f1_score = self.f1(predictions, labels)
-        print("Overall Testing Accuracy : ", acc , "| F1 Score : ", f1_score)
+    #     acc = self.accuracy(predictions, labels)
+    #     f1_score = self.f1(predictions, labels)
+    #     print("Overall Testing Accuracy : ", acc , "| F1 Score : ", f1_score)
