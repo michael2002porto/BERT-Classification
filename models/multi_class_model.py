@@ -51,7 +51,7 @@ class MultiClassModel(pl.LightningModule):
 
     def validation_step(self, valid_batch, batch_idx):
         print(f"Valid Batch: {valid_batch}")
-        x_input_ids, y = valid_batch
+        x_input_ids, _, _, y = valid_batch  # Unpack valid_batch, ignoring the middle two elements
         
         out = self(input_ids=x_input_ids)
         loss = self.criterion(out, y)
