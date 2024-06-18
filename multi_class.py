@@ -19,9 +19,9 @@ def collect_parser():
     parser.add_argument("--batch_size", type=int, default=10)
     parser.add_argument("--max_epochs", type=int, default=10)
 
-    parser.add_argument("--preprocessed_dir", type=str, default="./BERT-Classification/data/preprocessed")
-    parser.add_argument("--train_data_dir", type=str, default="./BERT-Classification/data/training.res")
-    parser.add_argument("--test_data_dir", type=str, default="./BERT-Classification/data/testing.res")
+    parser.add_argument("--preprocessed_dir", type=str, default="data/preprocessed")
+    parser.add_argument("--train_data_dir", type=str, default="data/training.res")
+    parser.add_argument("--test_data_dir", type=str, default="data/testing.res")
 
     parser.add_argument("--n_classes", type=str, default="5") # total label (class label)
 
