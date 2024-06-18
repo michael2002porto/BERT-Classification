@@ -8,7 +8,7 @@ import pytorch_lightning as pl
 from transformers import BertModel
 from sklearn.metrics import classification_report
 
-from torchmetrics import Accuracy, F1Score, PrecisionRecallCurve
+from torchmetrics.classification import MulticlassAccuracy, MulticlassF1Score, PrecisionRecallCurve
 
 class MultiClassModel(pl.LightningModule):
     def __init__(self,
@@ -32,12 +32,11 @@ class MultiClassModel(pl.LightningModule):
         self.lr = lr
         self.criterion = nn.BCEWithLogitsLoss()
 
-        self.accuracy = Accuracy(task="multiclass", num_classes = self.num_classes)
-        self.f1 = F1Score(task = "multiclass", 
-                          average = "micro", 
-                          multidim_average = "global",
+        self.accuracy = MulticlassAccuracy(task="multiclass", num_classes = self.num_classes)
+        self.f1 = MulticlassF1Score(task = "multiclass", 
+                          average = "micro",
                           num_classes = self.num_classes)
-        self.precission_recall = PrecisionRecallCurve(task = "multiclass", num_classes = self.num_classes)
+        # self.precission_recall = PrecisionRecallCurve(task = "multiclass", num_classes = self.num_classes)
 
     # Model
     def forward(self, input_ids):
@@ -72,11 +71,11 @@ class MultiClassModel(pl.LightningModule):
         f1_score = self.f1(out, y.float())
         loss = self.criterion(out, target = y.float())
 
-        # pred = out.argmax(1).cpu()
-        # true = y.argmax(1).cpu()
+        # pred = out
+        # true = y
 
-        # acc = self.accuracy(pred, true)
-        # f1_score = self.f1(pred, true)
+        # acc = self.accuracy(out, y)
+        
         # precission, recall, _ = self.precission_recall(out, y)
         # report = classification_report(true, pred, output_dict = True, zero_division = 0)
 
@@ -95,8 +94,8 @@ class MultiClassModel(pl.LightningModule):
 
         loss = self.criterion(out, target = y.float())
 
-        # pred = out.argmax(1).cpu()
-        # true = y.argmax(1).cpu()
+        # pred = out
+        # true = y
 
         # report = classification_report(true, pred, output_dict = True, zero_division = 0)
         # acc = self.accuracy(out, y)
@@ -109,16 +108,10 @@ class MultiClassModel(pl.LightningModule):
         return loss
     
     def predict_step(self, pred_batch, batch_idx):
-        # x_input_ids, x_token_type_ids, x_attention_mask, y = pred_batch        
         x_input_ids, y = pred_batch
         
-        # out = self(input_ids = x_input_ids,
-        #            attention_mask = x_attention_mask,
-        #            token_type_ids = x_token_type_ids)
         out = self(input_ids = x_input_ids)
         # ke tiga parameter di input dan diolah oleh method / function forward
-        # pred = out.argmax(1).cpu()
-        # true = y.argmax(1).cpu()
         pred = out
         true = y
 
@@ -164,4 +157,4 @@ class MultiClassModel(pl.LightningModule):
         
     #     acc = self.accuracy(predictions, labels)
     #     f1_score = self.f1(predictions, labels)
-    #     print("Overall Testing Accuracy : ", acc , "| F1 Score : ", f1_score)
+#     print("Overall Testing Accuracy : ", acc , "| F1 Score : ", f1_score)
