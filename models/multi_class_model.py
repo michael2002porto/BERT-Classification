@@ -119,7 +119,7 @@ class MultiClassModel(pl.LightningModule):
 
         return {"predictions": pred, "labels": true}
 
-    def training_epoch_end(self, outputs):
+    def on_training_epoch_end(self, outputs):
         labels = []
         predictions = []
 
