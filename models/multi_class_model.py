@@ -103,7 +103,7 @@ class MultiClassModel(pl.LightningModule):
         # self.log("accuracy", acc, prog_bar = True)
         self.log("loss", loss)
 
-        return loss
+        return {"loss": loss}
     
     def predict_step(self, pred_batch, batch_idx):
         x_input_ids, y = pred_batch
