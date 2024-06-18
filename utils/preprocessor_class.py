@@ -170,7 +170,7 @@ class PreprocessorClass(pl.LightningDataModule):
             dataset = self.train_data,
             batch_size = self.batch_size,
             sampler = sampler,
-            num_workers = 10
+            num_workers = 4
         )
     
     def val_dataloader(self):
@@ -179,7 +179,7 @@ class PreprocessorClass(pl.LightningDataModule):
             dataset = self.valid_data,
             batch_size = self.batch_size,
             sampler = sampler,
-            num_workers = 10
+            num_workers = 4
         )
 
     def predict_dataloader(self):
@@ -188,7 +188,7 @@ class PreprocessorClass(pl.LightningDataModule):
             dataset = self.test_data,
             batch_size = self.batch_size,
             sampler = sampler,
-            num_workers = 10
+            num_workers = 4
         )
     
 # if __name__ == '__main__':
