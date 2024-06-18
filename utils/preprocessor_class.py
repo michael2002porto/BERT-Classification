@@ -19,8 +19,8 @@ class PreprocessorClass(pl.LightningDataModule):
 
     def __init__(self, 
                  preprocessed_dir,
-                 train_data_dir = "../data/training.res",
-                 test_data_dir = "../data/testing.res",
+                 train_data_dir = "./data/training.res",
+                 test_data_dir = "./data/testing.res",
                  batch_size = 10,
                  max_length = 100):
         
