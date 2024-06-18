@@ -1,13 +1,8 @@
 import random
-
 import torch
 import torch.nn as nn
-
 import pytorch_lightning as pl
-
 from transformers import BertModel
-from sklearn.metrics import classification_report
-
 from torchmetrics.classification import MulticlassAccuracy, MulticlassF1Score
 
 class MultiClassModel(pl.LightningModule):
@@ -55,7 +50,9 @@ class MultiClassModel(pl.LightningModule):
         return {"loss": loss}
 
     def validation_step(self, valid_batch, batch_idx):
+        print(f"Valid Batch: {valid_batch}")
         x_input_ids, y = valid_batch
+        
         out = self(input_ids=x_input_ids)
         loss = self.criterion(out, y)
         f1_score = self.f1(out, y)
@@ -63,41 +60,10 @@ class MultiClassModel(pl.LightningModule):
         self.log("val_f1_score", f1_score, prog_bar=True)
         self.log("val_loss", loss)
         return loss
-
+    
     def predict_step(self, pred_batch, batch_idx):
         x_input_ids, y = pred_batch
         out = self(input_ids=x_input_ids)
         pred = out
         true = y
         return {"predictions": pred, "labels": true}
-
-    def on_training_epoch_end(self, outputs):
-        labels = []
-        predictions = []
-
-        for output in outputs:
-            labels.extend(output["labels"].detach().cpu())
-            predictions.extend(output["predictions"].detach().cpu())
-
-        labels = torch.stack(labels).int()
-        predictions = torch.stack(predictions)
-
-        acc = self.accuracy(predictions, labels)
-        f1_score = self.f1(predictions, labels)
-        print("Overall Training Accuracy : ", acc, "| F1 Score : ", f1_score)
-
-    def on_predict_epoch_end(self, outputs):
-        labels = []
-        predictions = []
-
-        for output in outputs:
-            for out in output:
-                labels.extend(out["labels"].detach().cpu())
-                predictions.extend(out["predictions"].detach().cpu())
-
-        labels = torch.stack(labels).int()
-        predictions = torch.stack(predictions)
-        
-        acc = self.accuracy(predictions, labels)
-        f1_score = self.f1(predictions, labels)
-        print("Overall Testing Accuracy : ", acc, "| F1 Score : ", f1_score)
