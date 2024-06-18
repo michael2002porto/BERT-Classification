@@ -32,10 +32,8 @@ class MultiClassModel(pl.LightningModule):
         self.lr = lr
         self.criterion = nn.BCEWithLogitsLoss()
 
-        self.accuracy = MulticlassAccuracy(task="multiclass", num_classes = self.num_classes)
-        self.f1 = MulticlassF1Score(task = "multiclass", 
-                          average = "micro",
-                          num_classes = self.num_classes)
+        self.accuracy = MulticlassAccuracy(num_classes = self.num_classes)
+        self.f1 = MulticlassF1Score(average = "micro", num_classes = self.num_classes)
         # self.precission_recall = PrecisionRecallCurve(task = "multiclass", num_classes = self.num_classes)
 
     # Model
