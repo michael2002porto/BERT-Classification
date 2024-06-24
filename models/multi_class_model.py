@@ -77,7 +77,7 @@ class MultiClassModel(pl.LightningModule):
 
         acc = self.accuracy(pred, true)
         f1_score = self.f1(pred, true)
-        precission, recall, _ = self.precission_recall(out, y)
+        # precission, recall = self.precission_recall(out, y)
         # report = classification_report(true, pred, output_dict = True, zero_division = 0)
 
         self.log("accuracy", acc, prog_bar = True)
