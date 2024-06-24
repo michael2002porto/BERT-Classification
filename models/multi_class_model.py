@@ -110,9 +110,10 @@ class MultiClassModel(pl.LightningModule):
     def predict_step(self, pred_batch, batch_idx):
         x_input_ids, x_token_type_ids, x_attention_mask, y = pred_batch
         
-        out = self(input_ids = x_input_ids,
-                   attention_mask = x_attention_mask,
-                   token_type_ids = x_token_type_ids)
+        # out = self(input_ids = x_input_ids,
+        #            attention_mask = x_attention_mask,
+        #            token_type_ids = x_token_type_ids)
+        out = self(input_ids = x_input_ids)
         # ke tiga parameter di input dan diolah oleh method / function forward
         pred = out
         true = y
