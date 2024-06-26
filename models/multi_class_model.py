@@ -129,44 +129,44 @@ class MultiClassModel(pl.LightningModule):
 
         return {"predictions": pred, "labels": true}
 
-    def on_training_epoch_end(self, outputs):
-        labels = []
-        predictions = []
+    # def on_training_epoch_end(self, outputs):
+    #     labels = []
+    #     predictions = []
 
-        for output in outputs:
-            for out_lbl in output["labels"].detach().cpu():
-                labels.append(out_lbl)
-            for out_pred in output["predictions"].detach().cpu():
-                predictions.append(out_pred)
+    #     for output in outputs:
+    #         for out_lbl in output["labels"].detach().cpu():
+    #             labels.append(out_lbl)
+    #         for out_pred in output["predictions"].detach().cpu():
+    #             predictions.append(out_pred)
 
-        labels = torch.stack(labels).int()
-        predictions = torch.stack(predictions)
+    #     labels = torch.stack(labels).int()
+    #     predictions = torch.stack(predictions)
 
-        # Hitung akurasi
+    #     # Hitung akurasi
         
-        # accuracy = Accuracy(task = "multiclass", num_classes = self.num_classes)
-        acc = self.accuracy(predictions, labels)
-        f1_score = self.f1(predictions, labels)
-        # Print Akurasinya
-        print("Overall Training Accuracy : ", acc , "| F1 Score : ", f1_score)
+    #     # accuracy = Accuracy(task = "multiclass", num_classes = self.num_classes)
+    #     acc = self.accuracy(predictions, labels)
+    #     f1_score = self.f1(predictions, labels)
+    #     # Print Akurasinya
+    #     print("Overall Training Accuracy : ", acc , "| F1 Score : ", f1_score)
 
-    def on_predict_epoch_end(self, outputs):
-        labels = []
-        predictions = []
+    # def on_predict_epoch_end(self, outputs):
+    #     labels = []
+    #     predictions = []
 
-        for output in outputs:
-            # print(output[0]["predictions"][0])
-            # print(len(output))
-            # break
-            for out in output:
-                for out_lbl in out["labels"].detach().cpu():
-                    labels.append(out_lbl)
-                for out_pred in out["predictions"].detach().cpu():
-                    predictions.append(out_pred)
+    #     for output in outputs:
+    #         # print(output[0]["predictions"][0])
+    #         # print(len(output))
+    #         # break
+    #         for out in output:
+    #             for out_lbl in out["labels"].detach().cpu():
+    #                 labels.append(out_lbl)
+    #             for out_pred in out["predictions"].detach().cpu():
+    #                 predictions.append(out_pred)
 
-        labels = torch.stack(labels).int()
-        predictions = torch.stack(predictions)
+    #     labels = torch.stack(labels).int()
+    #     predictions = torch.stack(predictions)
         
-        acc = self.accuracy(predictions, labels)
-        f1_score = self.f1(predictions, labels)
-        print("Overall Testing Accuracy : ", acc , "| F1 Score : ", f1_score)
+    #     acc = self.accuracy(predictions, labels)
+    #     f1_score = self.f1(predictions, labels)
+    #     print("Overall Testing Accuracy : ", acc , "| F1 Score : ", f1_score)
