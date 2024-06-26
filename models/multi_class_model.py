@@ -40,8 +40,8 @@ class MultiClassModel(pl.LightningModule):
         self.precission_recall = PrecisionRecallCurve(task = "multiclass", num_classes = self.num_classes)
 
     # Model
-    def forward(self, input_ids):
-        bert_out = self.bert(input_ids = input_ids)
+    def forward(self, input_ids, token_type_ids, attention_mask):
+        bert_out = self.bert(input_ids = input_ids, token_type_ids = token_type_ids, attention_mask = attention_mask)
         hidden_state = bert_out[0]
         pooler = hidden_state[:, 0]
         # Outout size (batch size = 30 baris, sequence length = 100 kata / token, hidden_size = 768 tensor jumlah vector representation dari bert)
@@ -67,7 +67,11 @@ class MultiClassModel(pl.LightningModule):
     def training_step(self, train_batch, batch_idx):
         x_input_ids, x_token_type_ids, x_attention_mask, y = train_batch
         
-        out = self(input_ids = x_input_ids)
+        out = self(
+            input_ids = x_input_ids,
+            token_type_ids = x_token_type_ids,
+            attention_mask = x_attention_mask
+        )
         # ke tiga parameter di input dan diolah oleh method / function forward
 
         loss = self.criterion(out, target = y.float())
@@ -77,7 +81,7 @@ class MultiClassModel(pl.LightningModule):
 
         acc = self.accuracy(pred, true)
         f1_score = self.f1(pred, true)
-        # precission, recall = self.precission_recall(out, y)
+        precission, recall = self.precission_recall(out, y)
         # report = classification_report(true, pred, output_dict = True, zero_division = 0)
 
         self.log("accuracy", acc, prog_bar = True)
@@ -89,7 +93,11 @@ class MultiClassModel(pl.LightningModule):
     def validation_step(self, valid_batch, batch_idx):
         x_input_ids, x_token_type_ids, x_attention_mask, y = valid_batch
         
-        out = self(input_ids = x_input_ids)
+        out = self(
+            input_ids = x_input_ids,
+            token_type_ids = x_token_type_ids,
+            attention_mask = x_attention_mask
+        )
         # ke tiga parameter di input dan diolah oleh method / function forward
 
         loss = self.criterion(out, target = y.float())
@@ -110,10 +118,11 @@ class MultiClassModel(pl.LightningModule):
     def predict_step(self, pred_batch, batch_idx):
         x_input_ids, x_token_type_ids, x_attention_mask, y = pred_batch
         
-        # out = self(input_ids = x_input_ids,
-        #            attention_mask = x_attention_mask,
-        #            token_type_ids = x_token_type_ids)
-        out = self(input_ids = x_input_ids)
+        out = self(
+            input_ids = x_input_ids,
+            token_type_ids = x_token_type_ids,
+            attention_mask = x_attention_mask
+        )
         # ke tiga parameter di input dan diolah oleh method / function forward
         pred = out
         true = y
